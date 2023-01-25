@@ -2,28 +2,33 @@ package com.smartherd.globofly.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.Toast
-import com.smartherd.globofly.R
+import androidx.appcompat.app.AppCompatActivity
+import com.smartherd.globofly.databinding.ActivityDestinyListBinding
 import com.smartherd.globofly.helpers.DestinationAdapter
 import com.smartherd.globofly.models.Destination
 import com.smartherd.globofly.services.DestinationService
 import com.smartherd.globofly.services.ServiceBuilder
-import kotlinx.android.synthetic.main.activity_destiny_list.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class DestinationListActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityDestinyListBinding
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_destiny_list)
+        binding = ActivityDestinyListBinding.inflate(layoutInflater)
+        val view: View = binding.root
+        setContentView(view)
 
-		setSupportActionBar(toolbar)
-		toolbar.title = title
 
-		fab.setOnClickListener {
+//		setSupportActionBar(toolbar)
+//		toolbar.title = title
+
+        binding.fab.setOnClickListener {
 			val intent = Intent(this@DestinationListActivity, DestinationCreateActivity::class.java)
 			startActivity(intent)
 		}
@@ -53,7 +58,7 @@ class DestinationListActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     // Your status code is in the range of 200's
                     val destinationList = response.body()!!
-                    destiny_recycler_view.adapter = DestinationAdapter(destinationList)
+                    binding.destinyRecyclerView.adapter = DestinationAdapter(destinationList)
                 } else if(response.code() == 401) {
                     Toast.makeText(this@DestinationListActivity,
                         "Your session has expired. Please Login again.", Toast.LENGTH_LONG).show()
